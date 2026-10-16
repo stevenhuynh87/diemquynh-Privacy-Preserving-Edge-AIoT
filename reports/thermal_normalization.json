@@ -1,0 +1,28 @@
+{
+  "method": "global_pixel_standardization",
+  "fit_split": "train",
+  "fit_subjects": [
+    1,
+    2,
+    3,
+    4,
+    5,
+    6
+  ],
+  "fit_scope": "unique frames selected by training windows",
+  "mean": 24.38425870900055,
+  "std": 1.762894291045349,
+  "std_definition": "population",
+  "pixel_count": 1948416,
+  "frames_per_subject": {
+    "1": 435,
+    "2": 437,
+    "3": 372,
+    "4": 419,
+    "5": 438,
+    "6": 436
+  },
+  "minimum": 19.975792345974583,
+  "maximum": 31.6483742549961,
+  "training_ready": false
+}

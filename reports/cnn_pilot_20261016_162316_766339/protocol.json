@@ -1,0 +1,87 @@
+{
+  "run_type": "pilot_with_proposed_window_labels",
+  "config": {
+    "seed": 42,
+    "dataset_root": "data/Taramasco/dataset",
+    "modality": "ir_camera",
+    "split_unit": "subject",
+    "train_subjects": [
+      1,
+      2,
+      3,
+      4,
+      5,
+      6
+    ],
+    "validation_subjects": [
+      7,
+      8
+    ],
+    "test_subjects": [
+      9,
+      10
+    ],
+    "normalization": "fit_on_train_only",
+    "label_policy": "pending",
+    "training_ready": false,
+    "pending_reviews": [
+      {
+        "subject": 3,
+        "event": 2,
+        "issue": "Timestamp and supplied frame index disagree"
+      }
+    ]
+  },
+  "normalization": {
+    "method": "global_pixel_standardization",
+    "fit_split": "train",
+    "fit_subjects": [
+      1,
+      2,
+      3,
+      4,
+      5,
+      6
+    ],
+    "fit_scope": "unique frames selected by training windows",
+    "mean": 24.38425870900055,
+    "std": 1.762894291045349,
+    "std_definition": "population",
+    "pixel_count": 1948416,
+    "frames_per_subject": {
+      "1": 435,
+      "2": 437,
+      "3": 372,
+      "4": 419,
+      "5": 438,
+      "6": 436
+    },
+    "minimum": 19.975792345974583,
+    "maximum": 31.6483742549961,
+    "training_ready": false
+  },
+  "epochs": 20,
+  "batch_size_windows": 8,
+  "optimizer": "Adam",
+  "learning_rate": 0.001,
+  "loss": "unweighted_cross_entropy",
+  "device": "cpu",
+  "aggregation": "mean frame logits within each window",
+  "checkpoint_selection": "lowest validation loss across 20 epochs",
+  "test_images_used": false,
+  "torch_version": "2.14.1+cpu",
+  "manifest_sha256": "59634b59cb48117a0748b9235f81a5d4ac353cdea843eba28d431c95dcf98966",
+  "thermal_csv_sha256": {
+    "1": "9a167f2e80e9a8364892c3d2bf0757d7e7ac71d9d1498f3b17b9b75f0b05217a",
+    "2": "0487ad513245066106b00be493979b487fbb4ccd55698510a5a75069398978ce",
+    "3": "0fcb207ec6e1f9940a27a0f0ace3ecc1fcb3cfb971ea95270cb2a65c9a06501a",
+    "4": "3700fb16cf05966a6c644e5ecc3d6cf511210498880c19f749ab8821e2e51da9",
+    "5": "402bd810d3bcc3fc259edf5c188cf0856430ae29fd537fb8e6832a95ba308606",
+    "6": "7ed4026537fede091eb77cad96f5f13810ac60098d61f8281e41af1629d3c7d6",
+    "7": "de76a2b86c54ec633dce1b039ab9a7d8b686785e12b23dc46ccf063a969e9002",
+    "8": "672987ad32e82e96e6ad304272048b71a2c3b0bfc1e457c566001ca5f2589451"
+  },
+  "checkpoint": "results\\cnn_pilot_20261016_162316_766339\\best_model.pt",
+  "ai_assistance": "Training script drafted with ChatGPT/Codex assistance.",
+  "limits": "Window labels are proposed; not per-frame ground truth or final paper results."
+}

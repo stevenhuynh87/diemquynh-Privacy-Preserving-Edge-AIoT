@@ -1,0 +1,19 @@
+{
+  "seed": 42,
+  "dataset_root": "data/Taramasco/dataset",
+  "modality": "ir_camera",
+  "split_unit": "subject",
+  "train_subjects": [1, 2, 3, 4, 5, 6],
+  "validation_subjects": [7, 8],
+  "test_subjects": [9, 10],
+  "normalization": "fit_on_train_only",
+  "label_policy": "pending",
+  "training_ready": false,
+  "pending_reviews": [
+    {
+      "subject": 3,
+      "event": 2,
+      "issue": "Timestamp and supplied frame index disagree"
+    }
+  ]
+}

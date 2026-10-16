@@ -1,0 +1,22 @@
+{
+  "evaluation_unit": "4-second window",
+  "subjects": [
+    9,
+    10
+  ],
+  "windows": 80,
+  "accuracy": 0.7875,
+  "balanced_accuracy": 0.8416666666666666,
+  "fall_precision": 0.5428571428571428,
+  "fall_recall": 0.95,
+  "fall_f1": 0.6909090909090909,
+  "true_negative": 44,
+  "false_positive": 16,
+  "false_negative": 1,
+  "true_positive": 19,
+  "thermal_csv_sha256": {
+    "9": "2fff6e48b59aadf9bc4b126dc4eefbac6e04368f61763f09b7009b9f8ac390a3",
+    "10": "0487f8fe9919db6be391ea2c951989fd232df26749fe4c5d65d3fb2172d0fb6a"
+  },
+  "limits": "Pilot on proposed labels from two held-out subjects; not proof of real-world performance."
+}

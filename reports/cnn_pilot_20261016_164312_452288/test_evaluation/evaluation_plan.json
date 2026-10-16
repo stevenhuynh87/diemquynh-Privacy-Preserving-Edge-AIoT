@@ -1,0 +1,38 @@
+{
+  "checkpoint": "results\\cnn_pilot_20261016_164312_452288\\best_model.pt",
+  "checkpoint_sha256": "f6917c7fac5eebaff44af2257a49b5814731e759065fb18187d2da194af11bce",
+  "manifest_sha256": "59634b59cb48117a0748b9235f81a5d4ac353cdea843eba28d431c95dcf98966",
+  "selection": "Weighted pilot selected by validation balanced accuracy and fall F1; epoch selected by validation loss.",
+  "aggregation": "mean frame logits within each window",
+  "decision": "argmax; no threshold tuning on test",
+  "normalization": {
+    "method": "global_pixel_standardization",
+    "fit_split": "train",
+    "fit_subjects": [
+      1,
+      2,
+      3,
+      4,
+      5,
+      6
+    ],
+    "fit_scope": "unique frames selected by training windows",
+    "mean": 24.38425870900055,
+    "std": 1.762894291045349,
+    "std_definition": "population",
+    "pixel_count": 1948416,
+    "frames_per_subject": {
+      "1": 435,
+      "2": 437,
+      "3": 372,
+      "4": 419,
+      "5": 438,
+      "6": 436
+    },
+    "minimum": 19.975792345974583,
+    "maximum": 31.6483742549961,
+    "training_ready": false
+  },
+  "label_status": "proposed window labels; not fully visually verified",
+  "ai_assistance": "Evaluation script drafted with ChatGPT/Codex assistance."
+}

@@ -1,0 +1,12 @@
+{
+  "epoch": 2,
+  "validation": {
+    "loss": 0.5606522649526596,
+    "accuracy": 0.75,
+    "balanced_accuracy": 0.5,
+    "fall_precision": 0.0,
+    "fall_recall": 0.0,
+    "fall_f1": 0.0
+  },
+  "run_type": "pilot_with_proposed_window_labels"
+}

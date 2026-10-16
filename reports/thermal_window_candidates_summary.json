@@ -1,0 +1,131 @@
+{
+  "training_ready": false,
+  "config": {
+    "seed": 42,
+    "dataset_root": "data/Taramasco/dataset",
+    "modality": "ir_camera",
+    "split_unit": "subject",
+    "train_subjects": [
+      1,
+      2,
+      3,
+      4,
+      5,
+      6
+    ],
+    "validation_subjects": [
+      7,
+      8
+    ],
+    "test_subjects": [
+      9,
+      10
+    ],
+    "normalization": "fit_on_train_only",
+    "label_policy": "pending",
+    "training_ready": false,
+    "pending_reviews": [
+      {
+        "subject": 3,
+        "event": 2,
+        "issue": "Timestamp and supplied frame index disagree"
+      }
+    ]
+  },
+  "window_seconds": 4,
+  "target_nonfall_per_fall": 3,
+  "negative_guard_seconds_from_anchor": 4,
+  "maximum_gap_multiple_of_median_dt": 3,
+  "counts": [
+    {
+      "subject": 1,
+      "split": "train",
+      "fall": 10,
+      "nonfall": 30,
+      "negative_pool": 134,
+      "negative_shortfall": 0
+    },
+    {
+      "subject": 2,
+      "split": "train",
+      "fall": 10,
+      "nonfall": 30,
+      "negative_pool": 75,
+      "negative_shortfall": 0
+    },
+    {
+      "subject": 3,
+      "split": "train",
+      "fall": 9,
+      "nonfall": 27,
+      "negative_pool": 90,
+      "negative_shortfall": 0
+    },
+    {
+      "subject": 4,
+      "split": "train",
+      "fall": 10,
+      "nonfall": 30,
+      "negative_pool": 74,
+      "negative_shortfall": 0
+    },
+    {
+      "subject": 5,
+      "split": "train",
+      "fall": 10,
+      "nonfall": 30,
+      "negative_pool": 71,
+      "negative_shortfall": 0
+    },
+    {
+      "subject": 6,
+      "split": "train",
+      "fall": 10,
+      "nonfall": 30,
+      "negative_pool": 70,
+      "negative_shortfall": 0
+    },
+    {
+      "subject": 7,
+      "split": "validation",
+      "fall": 10,
+      "nonfall": 30,
+      "negative_pool": 64,
+      "negative_shortfall": 0
+    },
+    {
+      "subject": 8,
+      "split": "validation",
+      "fall": 10,
+      "nonfall": 30,
+      "negative_pool": 63,
+      "negative_shortfall": 0
+    },
+    {
+      "subject": 9,
+      "split": "test",
+      "fall": 10,
+      "nonfall": 30,
+      "negative_pool": 64,
+      "negative_shortfall": 0
+    },
+    {
+      "subject": 10,
+      "split": "test",
+      "fall": 10,
+      "nonfall": 30,
+      "negative_pool": 94,
+      "negative_shortfall": 0
+    }
+  ],
+  "excluded_events": [
+    {
+      "subject": 3,
+      "split": "train",
+      "event": 2,
+      "reason": "annotation_conflict_pending_review"
+    }
+  ],
+  "interval": "[start_s, end_s)",
+  "note": "Proposed window labels only; no per-frame ground truth assigned."
+}
