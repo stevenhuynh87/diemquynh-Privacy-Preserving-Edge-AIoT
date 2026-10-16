@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 import argparse
+import csv
 from pathlib import Path
 
 import numpy as np
@@ -66,24 +67,18 @@ def detect_time_col(df: pd.DataFrame) -> str | int | None:
 def to_seconds(
     series: pd.Series,
 ) -> tuple[np.ndarray, float] | None:
-    """Read numeric timestamps as seconds, as verified in the audit."""
-    if pd.api.types.is_numeric_dtype(series):
-        timestamps = series.to_numpy(dtype=np.float64)
-    else:
-        parsed = pd.to_datetime(series, errors="coerce")
-        if parsed.isna().all():
-            return None
-        first_valid = parsed.dropna().iloc[0]
-        timestamps = (
-            (parsed - first_valid).dt.total_seconds().to_numpy()
-        )
+    """Convert the audited numeric seconds without guessing date formats.
 
+    Invalid values retain their row position as NaN. Timestamp units must
+    come from the source audit, not an automatic magnitude-based guess.
+    """
+    timestamps = pd.to_numeric(series, errors="coerce").to_numpy(
+        dtype=np.float64
+    )
     finite = timestamps[np.isfinite(timestamps)]
     if finite.size == 0:
         return None
-
-    span = float(finite.max() - finite.min())
-    return timestamps, span
+    return timestamps, float(finite.max() - finite.min())
 
 
 class TaramascoDS:
@@ -106,7 +101,11 @@ class TaramascoDS:
         sensor: str,
         nrows: int | None = None,
     ) -> pd.DataFrame:
-        """Read a headerless sensor CSV, preserving its first row."""
+        """Read a rectangular headerless CSV, preserving its first row.
+
+        subject=None reads a root annotation table, not a sensor stream.
+        For a variable-width radar stream, use load_radar(subject).
+        """
         folder = (
             self.root
             if subject is None
@@ -120,6 +119,75 @@ class TaramascoDS:
             )
 
         return pd.read_csv(source, header=None, nrows=nrows)
+
+    def load_radar(self, subject: int):
+        """Read timestamps and variable-size raw seven-value groups."""
+        from data.radar_io import read_radar_csv
+
+        source = find_file_ci(
+            self.root / f"subject_{subject}", "radar"
+        )
+        if source is None:
+            raise FileNotFoundError(
+                f"Cannot find radar.csv for subject {subject}"
+            )
+        return read_radar_csv(source)
+
+    def load_record(self, subject: int) -> dict:
+        """Read modalities and original annotations without synchronization."""
+        thermal_record = self.load_sensor(subject, "ir_camera")
+        thermal = self.thermal_frames(subject=subject)
+        thermal_times = thermal_record.iloc[:, 0].to_numpy(
+            dtype=np.float64
+        )
+        radar_times, radar = self.load_radar(subject)
+
+        falls = self.load_falls()
+        column = subject - 1
+        if column < 0 or column >= falls.shape[1]:
+            raise ValueError("Subject has no annotation column.")
+
+        fall_times = falls.iloc[:, column].to_numpy(dtype=np.float64)
+        if not np.isfinite(fall_times).all():
+            raise ValueError("Invalid fall timestamps.")
+
+        raw_indices = {}
+        for name, sensor in (
+            ("thermal", "ir_camera"),
+            ("radar", "radar"),
+        ):
+            table = self.load_sensor(None, sensor)
+            if table.shape != falls.shape:
+                raise ValueError(
+                    f"{sensor} annotation table shape differs from falls."
+                )
+
+            values = table.iloc[:, column].to_numpy(dtype=np.float64)
+            if not (
+                np.isfinite(values).all()
+                and np.equal(values, np.floor(values)).all()
+            ):
+                raise ValueError(f"Invalid raw {sensor} indices.")
+
+            raw_indices[name] = values.astype(np.int64)
+
+        return {
+            "thermal_frames": thermal,
+            "radar_frames": radar,
+            "timestamps": {
+                "thermal": thermal_times,
+                "radar": radar_times,
+            },
+            "label": {
+                "fall_timestamps_s": fall_times,
+                "frame_indices_raw": raw_indices,
+                "subject_column_0based": column,
+                "index_base": None,
+                "frame_labels": None,
+                "status": "unverified",
+            },
+            "subject": subject,
+        }
 
     def load_falls(self) -> pd.DataFrame:
         """Read the original fall timestamp table without changing it."""
@@ -157,86 +225,108 @@ class TaramascoDS:
         subject: int | None,
         sensor: str,
     ) -> dict:
-        info = {
-            "subject": "ALL" if subject is None else subject,
-            "sensor": sensor,
-        }
+        """Audit first-column seconds in one subject's raw sensor CSV.
 
-        try:
-            record = self.load_sensor(subject, sensor)
-        except FileNotFoundError:
+        Root CSVs are annotation tables and are deliberately excluded.
+        csv.reader supports radar rows with differing point counts. Payload
+        decoding, pixel layout and synchronization are not checked here.
+        """
+        if subject is None:
+            raise ValueError(
+                "Root CSVs are annotations, not sensor recordings. "
+                "Pass a subject ID to audit_sensor."
+            )
+        if sensor not in SENSORS:
+            raise ValueError(f"Unknown sensor: {sensor}")
+
+        folder = self.root / f"subject_{subject}"
+        source = find_file_ci(folder, sensor)
+        info = {"subject": subject, "sensor": sensor}
+        if source is None:
             info["status"] = "MISSING"
             return info
-        except (pd.errors.ParserError, pd.errors.EmptyDataError) as exc:
-            info["status"] = "READ_ERROR"
-            info["error"] = str(exc)
+
+        timestamps = []
+        widths = []
+        blank_rows = 0
+        try:
+            with source.open(
+                "r", encoding="utf-8-sig", newline=""
+            ) as stream:
+                for row in csv.reader(stream, strict=True):
+                    # Preserve every CSV row's position, including blanks.
+                    if not row or not any(cell.strip() for cell in row):
+                        blank_rows += 1
+                        timestamps.append(float("nan"))
+                        continue
+                    widths.append(len(row))
+                    try:
+                        timestamp = float(row[0].strip())
+                    except ValueError:
+                        timestamp = float("nan")
+                    timestamps.append(timestamp)
+        except (csv.Error, UnicodeError, OSError) as exc:
+            info.update(status="READ_ERROR", error=str(exc))
             return info
 
+        values = np.asarray(timestamps, dtype=np.float64)
+        finite = np.isfinite(values)
+        invalid = int((~finite).sum())
+        dt = np.diff(values)
+        repeated = int((dt == 0).sum())
+        backwards = int((dt < 0).sum())
         info.update(
+            rows=len(values),
+            valid_timestamps=int(finite.sum()),
+            invalid_timestamps=invalid,
+            blank_rows=blank_rows,
+            n_cols=max(widths, default=0),
+            min_cols=min(widths, default=0),
+            variable_width=len(set(widths)) > 1,
+            time_col=0,
+            repeated_timestamps=repeated,
+            backwards_steps=backwards,
+            unit="s",
+            large_gap_factor=3.0,
             status="ok",
-            rows=len(record),
-            n_cols=record.shape[1],
-            nan_pct=round(
-                float(record.isna().mean().mean()) * 100,
-                2,
-            ),
         )
-
-        time_column = detect_time_col(record)
-        info["time_col"] = time_column
-
-        if time_column is None:
-            info["status"] = "NO_TIMESTAMP_COLUMN"
-            return info
-
-        converted = to_seconds(record[time_column])
-        if converted is None:
+        if not finite.any():
             info["status"] = "INVALID_TIMESTAMPS"
             return info
 
-        timestamps, span = converted
-        dt = np.diff(timestamps)
-
-        invalid = int((~np.isfinite(timestamps)).sum())
-        repeated = int((dt == 0).sum())
-        backwards = int((dt < 0).sum())
-
+        valid_values = values[finite]
         info.update(
-            duration=round(span, 6),
-            invalid_timestamps=invalid,
-            repeated_timestamps=repeated,
-            backwards_steps=backwards,
+            duration=float(valid_values.max() - valid_values.min()),
+            first_timestamp_s=float(valid_values[0]),
+            last_timestamp_s=float(valid_values[-1]),
         )
-
         if invalid or repeated or backwards:
             info["status"] = "REVIEW_TIMESTAMP_ERRORS"
+        elif len(values) < 2:
+            info["status"] = "INSUFFICIENT_TIMESTAMPS"
 
+        # Do not drop invalid rows before differencing: doing so would
+        # create artificial adjacent timestamp pairs across bad rows.
         positive_dt = dt[np.isfinite(dt) & (dt > 0)]
-
         if positive_dt.size:
             median_dt = float(np.median(positive_dt))
-            info["median_dt"] = median_dt
-
-            # Do not report a single estimated frequency when timestamps
-            # contain invalid, repeated or backwards values.
+            gaps = int((positive_dt > 3.0 * median_dt).sum())
+            info.update(median_dt=median_dt, large_gaps=gaps)
             if not (invalid or repeated or backwards):
                 info["approx_Hz"] = 1.0 / median_dt
-
+                if gaps:
+                    info["status"] = "REVIEW_IRREGULAR_SAMPLING"
         return info
 
     def audit_all(self) -> pd.DataFrame:
-        rows = [
-            self.audit_sensor(None, sensor)
-            for sensor in SENSORS
-        ]
-
+        """Audit each subject/sensor pair; never audit root annotations."""
+        rows = []
         for subject_folder in self.subjects:
             subject_id = int(subject_folder.name.split("_")[1])
             rows.extend(
                 self.audit_sensor(subject_id, sensor)
                 for sensor in SENSORS
             )
-
         return pd.DataFrame(rows)
 
 

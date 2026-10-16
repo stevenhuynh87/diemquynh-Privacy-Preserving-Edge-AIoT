@@ -1,0 +1,18 @@
+Source: C:\phykd_fall\data\Taramasco\dataset\subject_1\radar.csv
+Radar frames: 5396
+Timestamps: 5396
+Timestamp dtype: float64
+Empty frames preserved: 242
+Groups per frame: 0 to 162
+First five shapes: [(0, 7), (0, 7), (1, 7), (2, 7), (2, 7)]
+First timestamp: 1701265323.543925
+Last timestamp: 1701265972.7770543
+Repeated timestamp steps: 0
+Backwards timestamp steps: 0
+Median positive dt: 0.120340 seconds
+Hz from median positive dt: 8.309798
+Finite values: True
+Raw CSV read: PASS
+Seven-value groups retain their original column order.
+Feature meanings, synchronization and labels: not verified.
+Original CSV unchanged.

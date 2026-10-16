@@ -76,3 +76,29 @@ def test_real_thermal_frequency(dataset):
 
     print(f"\nMedian dt: {median_dt:.6f} s")
     print(f"Estimated thermal frequency: {estimated_hz:.6f} Hz")
+
+def test_record_contains_modalities_and_raw_annotations(dataset):
+    record = dataset.load_record(subject=1)
+
+    assert set(record) == {
+        "thermal_frames", "radar_frames",
+        "timestamps", "label", "subject",
+    }
+    assert record["subject"] == 1
+    assert record["thermal_frames"].shape == (1785, 24, 32)
+    assert len(record["radar_frames"]) == 5396
+    assert record["timestamps"]["thermal"].shape == (1785,)
+    assert record["timestamps"]["radar"].shape == (5396,)
+
+    label = record["label"]
+    assert label["fall_timestamps_s"].shape == (10,)
+    assert label["fall_timestamps_s"][0] == 1701265486.0
+    assert label["frame_indices_raw"]["thermal"][0] == 418
+    assert label["frame_indices_raw"]["radar"][0] == 1356
+
+    # Unknown annotation conventions must remain explicit.
+    assert label["index_base"] is None
+    assert label["frame_labels"] is None
+    assert label["status"] == "unverified"
+
+    print("\nRecord fields complete; original annotations preserved.")
