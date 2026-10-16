@@ -1,0 +1,31 @@
+# Python
+__pycache__/
+*.py[cod]
+
+# Virtual environment
+.venv/
+venv/
+env/
+
+# VS Code
+.vscode/
+
+# Jupyter
+.ipynb_checkpoints/
+
+# Large datasets
+data/Taramasco/
+data/MM-Fi/
+data/NTU_RGB+D/
+data/UR_Fall/
+
+# Generated results
+results/*
+!results/.gitkeep
+
+# Pytest
+.pytest_cache/
+
+# OS
+.DS_Store
+Thumbs.db

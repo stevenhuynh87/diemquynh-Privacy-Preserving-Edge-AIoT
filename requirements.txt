@@ -1,0 +1,9 @@
+numpy
+pandas
+matplotlib
+scikit-learn
+openpyxl
+torch
+torchvision
+pytest
+pre-commit
