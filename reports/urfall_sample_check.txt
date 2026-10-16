@@ -1,0 +1,68 @@
+UR Fall initial sample check
+Source: C:\Q\NCKH\Privacy-Preserving Edge AIoT Fall Detection via Cross-Modal Knowledge Distillation from RGB to Low-Resolution\phykd_datasets\UR Fall
+Scope: two camera-0 depth sequences and four CSV files.
+Original files are read only; no extraction or modification.
+
+Archive: fall-01-cam0-d.zip
+Archive bytes: 45129329
+ZIP integrity: PASS
+PNG files listed: 160
+Sample: fall-01-cam0-d/fall-01-cam0-d-001.png
+PNG dimensions: 480 x 640
+PNG bit depth: 16
+PNG color type: 0 (0 = grayscale)
+Pillow mode: I;16
+Decoded shape: (480, 640)
+Decoded dtype: uint16
+Raw pixel range: 0 to 59048
+Finite pixels: True
+Nonzero pixels: 273595
+First depth image read: PASS
+
+Archive: adl-01-cam0-d.zip
+Archive bytes: 18198357
+ZIP integrity: PASS
+PNG files listed: 150
+Sample: adl-01-cam0-d/adl-01-cam0-d-001.png
+PNG dimensions: 480 x 640
+PNG bit depth: 16
+PNG color type: 0 (0 = grayscale)
+Pillow mode: I;16
+Decoded shape: (480, 640)
+Decoded dtype: uint16
+Raw pixel range: 0 to 65535
+Finite pixels: True
+Nonzero pixels: 270768
+First depth image read: PASS
+
+CSV: fall-01-data.csv
+File bytes: 2466
+Nonblank rows, including any header: 160
+Column counts observed: [3]
+First row: ['1', '0', '1.0249']
+CSV text read: PASS
+
+CSV: adl-01-data.csv
+File bytes: 1358
+Nonblank rows, including any header: 150
+Column counts observed: [2]
+First row: ['1', '0']
+CSV text read: PASS
+
+CSV: fall-01-acc.csv
+File bytes: 9529
+Nonblank rows, including any header: 193
+Column counts observed: [5]
+First row: ['-2', '1.02492350', '0.12871821', '0.99560097', '0.20658781']
+CSV text read: PASS
+
+CSV: adl-01-acc.csv
+File bytes: 13636
+Nonblank rows, including any header: 249
+Column counts observed: [5]
+First row: ['0', '1.160735423', '-0.048637797', '1.149866303', '-0.1508263']
+CSV text read: PASS
+
+Files with failures: 0
+Limits: only the first PNG per ZIP was decoded.
+CSV timestamps, synchronization and labels are not yet validated.

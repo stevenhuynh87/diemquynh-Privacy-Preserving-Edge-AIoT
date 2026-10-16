@@ -1,0 +1,33 @@
+Sample: C:\Q\NCKH\Privacy-Preserving Edge AIoT Fall Detection via Cross-Modal Knowledge Distillation from RGB to Low-Resolution\phykd_datasets\MM-Fi\MMFi_Dataset\MMFi_Dataset\E01\S01\A01
+
+File: depth\frame001.png
+Shape: (480, 640)
+Dtype: uint16
+Range: 0 to 32295
+Read check: PASS
+
+File: rgb\frame001.npy
+Shape: (17, 2)
+Dtype: float64
+Range: 124.978515625 to 430.2038879394531
+Read check: PASS
+
+File: infra1\frame001.npy
+Shape: (17, 2)
+Dtype: float64
+Range: 154.93792724609375 to 355.11370849609375
+Read check: PASS
+
+File: infra2\frame001.npy
+Shape: (17, 2)
+Dtype: float64
+Range: 154.9575653076172 to 348.2254638671875
+Read check: PASS
+
+File: ground_truth.npy
+Shape: (297, 17, 3)
+Dtype: float32
+Range: -0.806347668170929 to 3.261181592941284
+Read check: PASS
+
+LiDAR, mmWave and WiFi-CSI: decoding not checked.
