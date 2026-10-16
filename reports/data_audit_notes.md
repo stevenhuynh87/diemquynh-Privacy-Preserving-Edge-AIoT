@@ -143,7 +143,13 @@ Chưa phải kết quả đánh giá trên toàn bộ annotation gốc hoặc ng
 Cả hai báo cáo có phạm vi 40 CSV cảm biến của 10 subject.
 Audit v2 đọc được dòng radar có độ dài thay đổi, giữ vị trí dòng
 và dùng ngưỡng khoảng trống lớn hơn ba lần median dt dương.
-Chưa đối chiếu xong toàn bộ tiêu chí với công cụ frequency audit ban đầu.
+Đã đối chiếu mã nguồn và hai báo cáo trên cùng 40 bản ghi:
+- Công cụ ban đầu sprint1_tools/frequency_audit.py dùng ngưỡng gap > 1,5 lần median dt dương.
+- Audit v2 trong data/taramasco.py dùng ngưỡng gap > 3 lần median dt dương.
+- Số dòng của từng bản ghi khớp giữa hai báo cáo.
+- Có 15 bản ghi chuyển từ cảnh báo lấy mẫu không đều sang ok; số gap được đánh dấu của chúng giảm về 0 theo ngưỡng mới.
+Đây là thay đổi tiêu chí cảnh báo của dự án, không phải bằng chứng dữ liệu đã được sửa hoặc trở thành lấy mẫu đều.
+Lần đối chiếu này sử dụng mã nguồn và báo cáo đã lưu; không chạy lại hai công cụ trên dữ liệu gốc.
 Giữ cả hai báo cáo; không diễn giải thay đổi số cờ cảnh báo
 thành việc dữ liệu gốc đã được sửa hoặc hết lỗi.
 

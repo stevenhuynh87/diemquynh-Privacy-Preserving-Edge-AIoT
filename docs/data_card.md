@@ -87,7 +87,13 @@ Kết quả gồm 40 bản ghi cảm biến của 10 subject:
 Trong audit v2, khoảng trống lớn được đánh dấu khi lớn hơn
 ba lần median khoảng cách timestamp dương của file.
 Đây là ngưỡng kiểm tra do dự án chọn.
-Chưa đối chiếu xong toàn bộ tiêu chí với công cụ frequency audit ban đầu.
+Đã đối chiếu mã nguồn và hai báo cáo trên cùng 40 bản ghi:
+- Công cụ ban đầu sprint1_tools/frequency_audit.py dùng ngưỡng gap > 1,5 lần median dt dương.
+- Audit v2 trong data/taramasco.py dùng ngưỡng gap > 3 lần median dt dương.
+- Số dòng của từng bản ghi khớp giữa hai báo cáo.
+- Có 15 bản ghi chuyển từ cảnh báo lấy mẫu không đều sang ok; số gap được đánh dấu của chúng giảm về 0 theo ngưỡng mới.
+Đây là thay đổi tiêu chí cảnh báo của dự án, không phải bằng chứng dữ liệu đã được sửa hoặc trở thành lấy mẫu đều.
+Lần đối chiếu này sử dụng mã nguồn và báo cáo đã lưu; không chạy lại hai công cụ trên dữ liệu gốc.
 Giữ riêng cả hai báo cáo; chênh lệch số lượng cờ cảnh báo
 không có nghĩa dữ liệu gốc đã được sửa hoặc tự hết vấn đề.
 Audit timestamp cũng không xác nhận toàn bộ payload cảm biến đã hợp lệ.
