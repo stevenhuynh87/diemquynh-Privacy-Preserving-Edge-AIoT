@@ -9,7 +9,7 @@ Mục tiêu Sprint: xác minh gap/novelty, tiếp cận dữ liệu, dựng môi
 
 | Hạng mục | Kết quả và bằng chứng |
 | --- | --- |
-| Literature matrix v0 | Đã hoàn thành 25 bài S1; giữ thêm bốn bài S2 đã đọc sớm, tổng cộng 29 công trình trong docs/lit_matrix.xlsx. A1 đã đọc; phần toàn văn IEEE đi kèm A5 còn vướng ở Mục 4. |
+| Literature matrix v0 | Đã hoàn thành 25 bài S1; giữ thêm bốn bài S2 đã đọc sớm, tổng cộng 29 công trình trong docs/lit_matrix.xlsx. A1 đã đọc; A5 đã đọc mmFall, riêng bài IEEE đi kèm chưa đọc do chưa truy cập được toàn văn. |
 | Môi trường và repo | Đã chuyển project khỏi OneDrive; .venv/PyTorch CPU hoạt động. Code và công cụ kiểm tra được quản lý trên main local. |
 | TaramascoDS | data/taramasco.py có thermal_frames, radar_frames, timestamps, label và subject. Subject 1: 1.785 frame nhiệt 24x32; 5.396 frame radar, giữ 242 frame rỗng. Annotation gốc được giữ nguyên. |
 | Audit dữ liệu | 10 subject, 40 CSV cảm biến. Tần số từ median dt dương: nhiệt 2,59-2,61 Hz; radar 8,31-8,33 Hz; LiDAR khoảng 10 Hz; accelerometer khoảng 62,5 Hz. Có 100 mốc ngã; không có mốc ngoài bản ghi nhiệt; sai lệch nearest-frame tối đa 0,226928 s. |
