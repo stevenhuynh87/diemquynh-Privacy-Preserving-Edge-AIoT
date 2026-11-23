@@ -1,70 +1,75 @@
-# PhysicsExtractor — Formulation Draft
+# PhysicsExtractor — Bản nháp công thức và diễn giải
 
-Source: DiemQuynh_Planning_12_Month_Research_Roadmap.md
-Sections: 3.1, 7.2, Sprint 2
+Nguồn: DiemQuynh_Planning_12_Month_Research_Roadmap.md
+Các mục liên quan: 3.1, 7.2, Sprint 2
+Yêu cầu bổ sung: Nhận xét của thầy ngày 22/11/2026
 
-Status: DRAFT — NOT YET VALIDATED
+Trạng thái: BẢN NHÁP — CHƯA ĐƯỢC THẨM ĐỊNH
 
-## 1. Input [PLANNING]
+## 1. Đầu vào của PhysicsExtractor
 
-P(t): sequence of 3D human poses.
+P(t): chuỗi tư thế 3D của cơ thể người.
 
-Sprint 2 requires:
+Sprint 2 yêu cầu:
+
 PhysicsExtractor(joints, fps) -> dict
 
-## 2. Output [PLANNING]
+- joints: chuỗi khớp 3D có kích thước (T, J, 3), trong đó T là số khung hình và J là số khớp.
+- Tọa độ có đơn vị mét, trục z hướng lên.
+- fps: tần số lấy mẫu của chuỗi tư thế, tính bằng số khung hình mỗi giây.
+
+## 2. Đầu ra của PhysicsExtractor — theo Mục 7.2
 
 phi(t) = [h, v_z, a_peak, theta, T_ground]
 
-### h(t): Center-of-mass height
+Các đại lượng này được tính từ pose 3D.
 
-c(t): mass-weighted average of body-segment center-of-mass positions.
+### h(t): Độ cao trọng tâm
+
+c(t): trung bình có trọng số khối lượng của vị trí trọng tâm các đoạn cơ thể.
 
 h(t) = c_z(t)
 
-### v_z(t): Vertical velocity
+### v_z(t): Vận tốc theo phương thẳng đứng
 
 v_z(t) = dh(t)/dt
 
-### a_peak: Peak acceleration
+### a_peak: Độ lớn gia tốc thẳng đứng lớn nhất trong cửa sổ
 
-a_peak = max |d²h(t)/dt²| within a window.
+a_peak = max |d²h(t)/dt²| trong cửa sổ đang xét.
 
-Use numerical differentiation with Savitzky–Golay
-smoothing, according to Section 7.2.
+Sử dụng đạo hàm số có làm trơn Savitzky–Golay theo Mục 7.2.
 
-### theta(t): Torso angle
+### θ(t): Góc thân người
 
-Angle between the hip-to-neck vector
-and the vertical axis.
+Góc giữa vector hông → cổ và trục thẳng đứng.
 
-### T_ground(t): Ground duration
+### T_ground(t): Thời gian liên tục trọng tâm ở dưới ngưỡng
 
-Continuous duration for which:
+Khoảng thời gian liên tục mà:
 
 h(t) < h_thr
 
-## 3. Unresolved parameters [TBD]
+## 3. Các tham số chưa xác định
 
-- Body-segment mass weights and COM locations.
-- Joint mapping for each skeleton format.
-- Mapping each source dataset to the required coordinate convention: meters, z-axis pointing upward.
-- Savitzky–Golay window and polynomial order.
-- Ground-height threshold h_thr.
-- Exact window definition for peak acceleration.
+- Trọng số khối lượng và vị trí trọng tâm của các đoạn cơ thể.
+- Cách ánh xạ các khớp cho từng định dạng bộ xương.
+- Cách chuyển tọa độ của từng nguồn dữ liệu về quy ước: đơn vị mét, trục z hướng lên.
+- Độ dài cửa sổ và bậc đa thức Savitzky–Golay.
+- Ngưỡng độ cao h_thr.
+- Định nghĩa cụ thể của cửa sổ tính gia tốc đỉnh.
 
-These must be sourced and verified before
-using PhysicsExtractor for research experiments.
+Các tham số này cần có căn cứ và được kiểm tra trước khi sử dụng PhysicsExtractor cho các thí nghiệm nghiên cứu.
 
-## 4. Implementation status
+## 4. Trạng thái triển khai
 
-- [x] Preliminary vertical-kinematics helper.
-- [x] Synthetic free-fall helper test.
-- [ ] PhysicsExtractor accepting 3D joints.
-- [ ] Five physics outputs validated.
-- [ ] Configuration values sourced.
-- [ ] Tests for full PhysicsExtractor.
-- [ ] Reviewed and pushed to GitHub.
+- [x] Đã có hàm hỗ trợ sơ bộ tính các đại lượng chuyển động theo phương thẳng đứng.
+- [x] Đã có test rơi tự do tổng hợp cho hàm hỗ trợ.
+- [ ] PhysicsExtractor nhận đầu vào là chuỗi khớp 3D.
+- [ ] Đã kiểm chứng đủ năm đại lượng vật lý đầu ra.
+- [ ] Các giá trị cấu hình có nguồn hoặc căn cứ lựa chọn.
+- [ ] Đã có các test cho PhysicsExtractor đầy đủ.
+- [ ] Đã rà soát và push bản triển khai lên GitHub.
 
 ## 5. My understanding of Section 3.1
 
@@ -98,7 +103,7 @@ Output:
 Vai trò của teacher và đặc trưng vật lý:
 
 - Thông tin đặc quyền (privileged information): là data chỉ có lúc huấn luyện, chuỗi pose 3D P(t), lấy từ RGB thật hoặc ground-truth của mô phỏng, giống như đáp án chi tiết của giáo viên và học sinh không được phép mang vào phòng thi.
-- Teacher nhìn thấy P(t) nên hiểu rõ chuyển động cơ thể, học sinh nhận kiến thức đó từ teacher và học. Đây là ý tưởng knowledge distillation.
+- Teacher nhìn thấy P(t) nên hiểu rõ chuyển động cơ thể, student nhận kiến thức đó từ teacher và học. Đây là ý tưởng knowledge distillation.
 
 Đặc trưng vật lý (h, v_z, a_peak, θ, T_ground) được tính từ pose 3D để hỗ trợ huấn luyện. Student học từ teacher và học dự đoán các đại lượng vật lý từ ảnh nhiệt và radar. Hiệu quả của cách học này cần được kiểm chứng bằng thực nghiệm.
 
