@@ -4,6 +4,31 @@ Sprint 1 project for privacy-preserving fall detection using thermal and
 radar sensing. The CNN pilot uses thermal frames. Radar work currently
 covers raw-frame reading and sensor checks.
 
+## Sprint 2 - Pilot FallTwin and PhysicsExtractor
+
+**Status as of 26/11/2026: PARTIALLY COMPLETED.**
+
+### Completed
+- Implemented PhysicsExtractor and NTU physics/quality utilities.
+- Automated tests: 35/35 PASS.
+- Performed real NTU skeleton tracking and physics audits.
+- Committed source code, tests, and reports to GitHub.
+
+### Pending
+- Real-data calibration of `h_thr` from verified lying poses.
+- Validation of ground-relative COM height and T_ground.
+- Initial `sim/thermal_render.py` ThermalRenderer.
+- Radar simulation pilot: RadarSimL1 and RadarSimL2.
+- E0 experiment: 5 clips in 1 scene.
+- Benchmark of runtime, VRAM, and output size.
+- `sensor_params.yaml` and `pilot_benchmark.md`.
+
+**Note:** Synthetic physics tests are not equivalent to
+a completed FallTwin simulation or real-data calibration.
+
+See [PhysicsExtractor report](reports/physics_extractor_sprint2.md)
+and [synthetic threshold pilot](reports/physics_hthr_synthetic_pilot_v2.md).
+
 ## Sprint 1
 
 Period: 01/10/2026 - 18/10/2026. Phase: P1 - Gap, Data, Simulation.
