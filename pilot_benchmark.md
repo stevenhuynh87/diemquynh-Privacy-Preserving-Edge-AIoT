@@ -42,3 +42,17 @@ Dùng **RadarSimL2 làm mức chính trên máy hiện tại**, theo Plan B tron
 4. Bổ sung `sensor_params.yaml` với nguồn/đơn vị và `TBD` cho số chưa chắc; khi đổi thông số cảnh phải chạy benchmark mới, không gán ngược cấu hình mới cho lần chạy này.
 
 Đây là **benchmark hiệu năng mô phỏng thô**, không chứng minh chất lượng phát hiện ngã, độ trung thực ảnh nhiệt/radar hoặc mục tiêu độ trễ báo động 1,5 s.
+
+## Lần đo 2 — eval.latency.benchmark
+
+Cùng năm clip và cảnh của lần 1. Đọc NPZ đầu vào trước khi tính giờ; mỗi clip đo một lượt lạnh. Thời gian dưới đây gộp tạo thermal, RadarSimL2 và ghi NPZ nén.
+
+| Clip | Frame | Tổng ms/frame gồm ghi file | NPZ bytes |
+|---|---:|---:|---:|
+| S001C001P001R001A043 | 85 | 1,147 | 255687 |
+| S001C001P008R001A043 | 63 | 0,916 | 190739 |
+| S001C001P008R001A006 | 83 | 0,866 | 250471 |
+| S001C001P008R001A008 | 85 | 0,859 | 256541 |
+| S001C001P008R001A009 | 63 | 0,873 | 190461 |
+
+Tổng 379 frame; trung bình có trọng số do benchmark báo cáo: 0,937 ms/frame. Năm NPZ cộng 1.143.899 bytes, trùng dung lượng lần 1. CUDA không khả dụng nên peak CUDA VRAM là null (không đo được), không phải 0 MiB. Không suy ra độ biến thiên, độ trung thực cảm biến hoặc độ trễ báo động từ một lượt đo.
