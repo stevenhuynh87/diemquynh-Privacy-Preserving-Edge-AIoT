@@ -1,0 +1,41 @@
+﻿# Sprint 2 draft; TBD means source does not confirm the capture setting.
+mlx90640:
+  resolution_rows_columns: [24, 32]
+  fov_options_deg:
+    standard: [55, 35]
+    wide: [110, 75]
+  taramasco_fov_variant: TBD
+  netd_reference_K_rms_at_1_hz: 0.1
+  refresh_rate_options_hz: [0.5, 1, 2, 4, 8, 16, 32, 64]
+  taramasco_reported_output_hz: 2.6
+  taramasco_register_refresh_hz: TBD
+  manufacturer_source: https://www.melexis.com/en/product/MLX90640
+  datasheet_source: https://media.melexis.com/-/media/files/documents/datasheets/mlx90640-datasheet-melexis.pdf
+  taramasco_source: https://peerj.com/articles/19004.pdf
+  note: "NETD at 1 Hz is a reference, not the E0 noise setting."
+
+iwr6843:
+  chip_band_ghz: [60, 64]
+  manufacturer_source: https://www.ti.com/product/IWR6843
+  taramasco:
+    model: IWR6843AOP
+    reported_output_hz: 8.3
+    source: https://peerj.com/articles/19004.pdf
+    chirp_start_frequency_ghz: TBD
+    chirp_slope_mhz_per_us: TBD
+    chirp_ramp_time_us: TBD
+    adc_samples_per_chirp: TBD
+    chirps_per_frame: TBD
+  mmfi:
+    model: IWR6843
+    source: https://papers.nips.cc/paper_files/paper/2023/file/3baf7a39d07e9f4f1e258a412df94521-Paper-Datasets_and_Benchmarks.pdf
+    chirp_start_frequency_ghz: TBD
+    chirp_slope_mhz_per_us: TBD
+    chirp_ramp_time_us: TBD
+    adc_samples_per_chirp: TBD
+    chirps_per_frame: TBD
+
+pilot_assumptions:
+  ntu_fps_from_rgb_metadata: 30
+  skeleton_timestamps_verified: false
+  radar_l2_is_rf_simulation: false
